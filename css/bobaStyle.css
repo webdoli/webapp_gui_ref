@@ -1,0 +1,283 @@
+:root {
+    --color-1: #1d2333; /* 툴바, 뷰포트 색상 */
+    --color-2: #161b28; /* 속성창 색상 */
+    --color-3: #0b0b0c;
+    --color-4: #303030;
+    --color-5: #d3ccda; /* icon글씨색 */
+    --color-text: #fffdfa; /* 툴바 글씨색 */
+    --accent-color: #7750f8; /* 상단 메뉴바 색상 */
+    --color-bg-1: #1c1c1f;
+    --color-bg-2: #31313c;
+    --accent-color-3: #5383e8;
+    --accent-color-2: #5546e8;
+    --semi-transparent: rgba(18, 18, 18, 0.95);
+    --semi-transparent-2: rgba(255, 255, 255, 0.1);
+    --danger: #F44336;
+    --warning: #FFC107;
+    --success: #009688;
+}
+
+
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+#bobapix-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* bobapix header */
+#bobapix-header {
+    display: flex;
+    position: relative;
+    height: 60px;
+    background: var(--accent-color);
+    color: var(--color-text);
+    align-items: center;
+    padding: 0 16px;
+}
+
+#bobapix-header .menu {
+    left: 50px;
+}
+
+#bobapix-header .profile {
+    position: absolute;
+    right: 0;
+}
+
+#bobapix-middle {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+#bobapix-middle .toolbar {
+    width: 80px;
+    background-color: var(--color-bg-2);
+    flex-shrink: 0;
+    border-right: 1px solid var(--color-bg-1);
+}
+
+#bobapix-middle .toolbar .button-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+#bobapix-middle .toolbar .button-wrapper span {
+    text-align: center;
+    width: 100%;
+    padding: 1rem 0;
+    border-radius: 20px;
+    margin: .2rem 0;
+    font-size: .8em;
+    color: var(--color-text);
+}
+
+#bobapix-middle .toolbar .button-wrapper span:hover {
+    background: var(--accent-color-3);
+    cursor:pointer;
+}
+
+
+
+.icon img {
+    width: 24px;
+}
+
+/* property area */
+#bobapix-middle .property {
+    display: none; /* 기본: 안 보이도록 */
+    width: 240px;
+    background: var(--color-bg-1);
+    color: var(--color-text);
+    flex-shrink: 0;
+}
+
+#bobapix-middle .property.active {
+    display: block;
+}
+
+#bobapix-middle .property .property-title {
+    position: relative;
+    text-align: center;
+    font-weight: 700;
+    padding: .75em 0;
+    
+    background-color: var(--color-bg-2);
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+#bobapix-middle .property .property-title .icon-close {
+    position: absolute;
+    right: 20px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+
+/* viewport */
+#bobapix-middle .viewport {
+    flex: 1;
+    position: relative;
+    background: var(--color-bg-2);
+    border-left: var(--accent-color);
+}
+
+/* bobapix-bottom > control pannel */
+#bobapix-bottom {
+    /* position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0; */
+    
+    /* z-index: 99999999; */
+    
+}
+
+#bobapix-bottom .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    width: 100%;
+    height: 60px;
+    border-top: 1px solid black;
+    background-color: var(--color-bg-2);
+}
+
+#bobapix-bottom .timeline-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.timeline-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding: 10px;
+    border-radius: 6px;
+    color: #fff;
+}
+
+#timeline-zoom {
+    appearance: none;
+    width: 120px;
+    height: 4px;
+    border-radius: 5px;
+    background: #888;
+    cursor: pointer;
+}
+
+#timeline-zoom::-webkit-slider-thumb {
+    appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffd700;
+    cursor: pointer;
+    border: none;
+    margin-top: -6px;
+}
+
+#timeline-zoom::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffd700;
+    border: none;
+    cursor: pointer;
+}
+
+/* 기본 스타일 */
+#bobapix-bottom #speed {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background-color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* hover 시 배경색 변경 */
+#bobapix-bottom #speed:hover {
+    background-color: #444;
+}
+
+/* 드롭다운 메뉴 기본 상태: 숨김 */
+#bobapix-bottom #speed-settings {
+    display: none;
+    position: absolute;
+    bottom: 120%;
+    left: 0;
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    z-index: 1000;
+    min-width: 80px;
+}
+
+#bobapix-bottom #speed-settings .speed {
+    padding: 4px 36px;
+    color: white;
+    cursor: pointer;
+}
+
+#bobapix-bottom #speed-settings .speed:hover {
+    background-color: #555;
+}
+
+
+#bobapix-bottom .playback {
+    display: flex;
+    justify-content: space-evenly;
+    width: 20rem;
+}
+
+#bobapix-bottom .playback input {
+    background-color: transparent;
+    border: none;
+    color: var(--color-text);
+    font-weight: normal;
+    font-size: 1rem;
+    width: 70px;
+    padding: 0;
+}
+
+#bobapix-bottom .playback input:focus {
+    outline: none;
+}
+
+#bobapix-bottom .controls-right {
+    display: flex;
+    margin-right: 2rem;
+}
+
+#bobapix-bottom .controls-right #download {
+    line-height: 34px;
+    height: 34px;
+    padding: 0 10px;
+    background-color: var(--accent-color);
+    color: var(--color-text);
+}
+
+#bobapix-bottom .controls-right #download-icon {
+    width: 14px;
+}
