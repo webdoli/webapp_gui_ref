@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/bobaStyle.css">
+    <title>BoBaPixel</title>
+</head>
+<body>
+
+    <div id="bobapix-container">
+        <!-- 1.header -->
+        <header id="bobapix-header">
+
+            <!-- 1-1.brand area -->
+            <div class="brand">
+                <img src="" alt="">
+                <span>BOBA Pixel</span>
+            </div>
+
+            <div class="menu">
+                <span class="file">File</span>
+            </div>
+
+            <!-- 1-2.user profile area-->
+            <div class="profile">
+                <span class="user-name">guest</span>
+                <span>alert</span>
+            </div>
+        </header>
+
+
+        <!-- 2.middle -->
+        <article id="bobapix-middle">
+            <!-- 2-1.left toolbar area -->
+            <div class="toolbar">
+                <div class="button-wrapper">
+                    <span id="charactor" class="icon">
+                        <img src="./icons/icons8-character-48_grey.png" alt="">
+                        <div>Char</div>
+                    </span>
+                    <span id="objects" class="icon">
+                        <img src="./icons/icons8-nft-collection-48-grey.png" alt="">
+                        <div>Objects</div>
+                    </span>
+                    <span id="upload" class="icon">
+                        <img src="./icons/icons8-upload-48-grey.png" alt="">
+                        <div>Upload</div>
+                    </span>
+                    <span id="text" class="icon">
+                        <img src="./icons/icons8-text-48-grey.png" alt="">
+                        <div>Text</div>
+                    </span>
+                    <span id="env" class="icon">
+                        <img src="./icons/icons8-nature-48-grey.png" alt="">
+                        <div>Env</div>
+                    </span>
+                    <span id="template" class="icon">
+                        <img src="./icons/icons8-objects-48-grey.png" alt="">
+                        <div>Template</div>
+                    </span>
+                    <span id="render" class="icon">
+                        <img src="./icons/icons8-video-48-grey.png" alt="">
+                        <div>Render</div>
+                    </span>
+                </div>
+            </div>
+
+            <!-- 2-2.property area -->
+            <div class="property">
+                <div class="property-title"></div>
+                
+            </div>
+
+            <!-- 2-3.viewport area -->
+            <div class="viewport">
+                <div class="menubar"></div>
+            </div>
+
+            <!-- 2-4.layer area -->
+            <div class="layer">
+                <div class="header">
+                    <span class="layers"></span>
+                </div>
+                <div class="content"></div>
+                <div class="bottom">
+                    <span class="bar"></span>
+                    <span class="play"></span>
+                    <span class="download-menu"></span>
+                </div>
+            </div>
+
+        </article>
+        <!-- TIMELINE CONTROLS -->
+        <div id="bobapix-bottom">
+            <div class="controls">
+
+                <div class="timeline-wrap">
+                    <span class="icon"><img src="./icons/icons8-timeline-48_grey.png"/></span>
+                    <input id="timeline-zoom" type="range" min="5" max="47" value="47" step="1" class="rangeslider" autocomplete="off">
+                    <div id="speed">
+                        <div id="speed-settings">
+                            <div class="speed" data-speed="4"> 4.0x </div>
+                            <div class="speed" data-speed="3"> 3.0x </div>
+                            <div class="speed" data-speed="2"> 2.0x </div>
+                            <div class="speed" data-speed="1.5"> 1.5x </div>
+                            <div class="speed" data-speed="1"> 1.0x </div>
+                            <div class="speed" data-speed="0.5"> 0.5x </div>
+                        </div>
+                        <span class="icon"><img src="./icons/icons8-bolt-48_grey.png" alt=""></span>
+                        <span id="speed-text">1.0x</span>
+                        <span class="icon"><img src="./icons/icons8-up-arrow-48_grey.png" alt=""></span>
+                    </div>
+                </div>
+
+                <div class="playback">
+                    <div id="current-time">
+                        <input autocomplete="off" value="00:00:00" readonly>
+                    </div>
+                    <span id="skip-backward" class="icon"><img src="./icons/icons8-prevplay-48_grey.png"></span>
+                    <span id="play-button" class="icon"><img src="./icons/icons8-play-48_grey.png"></span>
+                    <span id="skip-forward" class="icon"><img src="./icons/icons8-nextplay-48_grey.png"></span>
+                    <div id="total-time">
+                        <input autocomplete="off" value="00:00:00" readonly>
+                    </div>
+                </div>
+
+                <div class="controls-right">
+                    <button type="button" id="download" class="btn primary">
+                    <img src="./icons/icons8-download-48_icon.png" id='download-icon'>
+                    Download
+                    </button>
+                </div>
+            </div>
+            
+        </div>
+        <!-- TIMELINE CONTROLS END -->
+    </div>
+    <script src="./js/bobapix.js" type="module"></script>
+</body>
+</html>
