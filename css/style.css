@@ -1,6 +1,7 @@
 :root {
     --color-1: #31313c; /* 툴바, 뷰포트 색상 */
     --color-2: #1c1c1f; /* 속성창 색상 */
+    --color-3: #1d2333; /* 진한 색상 */
     --color-text: #d3ccda; /* icon글씨색 */
     --color-text-2: #a189e9; /* 툴바 강조색 */
     --accent-color: #7750f8;
@@ -18,19 +19,22 @@ body, html {
 #app {
     display: grid;
     /* 3열: toolbar | property | viewport / 2행: main content | bottom controls */
-    grid-template-columns: 80px auto 1fr;
-    grid-template-rows: 1fr 100px 80px;
+    grid-template-columns: 80px auto auto;
+    /* grid-template-rows: 1fr 100px 80px; */
+    grid-template-rows: calc(100vh - 180px) 100px 80px; /* 1행 자동 조절 */
     grid-template-areas:
     "toolbar property viewport"
     "toolbar layer layer"
     "bottom bottom bottom";
+    width: 100vw;
     height: 100vh;
+    overflow-x: hidden;
 }
 
 .toolbar {
     padding: 24px 0; 
     grid-area: toolbar; 
-    background: var(--color-1);
+    background: var(--color-2);
     border-right: 1px solid #49494e;
     display:flex;
     flex-direction:column; 
@@ -81,16 +85,100 @@ body, html {
     width: 38px;
 }
 
+
+
+/* --------------------- */
+/* ----- Property ----- */
+/* --------------------- */
 #property { 
     grid-area: property; 
-    background:var(--color-2);
+    background:var(--semi-transparent);
     color: var(--color-text);
-    padding:10px;
-    width: 240px;
+    min-width: 20rem;
     display: none;
-    overflow:auto; 
+    overflow:auto;
+    contain: content;
 }
 
+#property-title {
+    font-size: 1.2rem;
+    padding: 1.1rem 0;
+    padding-left: 1rem;
+    font-weight: bolder;
+    /* background: var(--color-1); */
+}
+
+/* Property:: 업로드 영역 */
+.upload-wrapper {
+    margin-top: 12px;
+}
+
+/* 업로드 영역 */
+.upload-area {
+    display: flex;
+    width: 80%;
+    height: 220px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 2px dashed #555;
+    border-radius: 8px;
+    margin: 0 auto;
+    padding: 24px;
+    text-align: center;
+    color: #888;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.upload-area.hover,
+.upload-area:focus-within {
+    background: rgba(255,255,255,0.05);
+    border-color: #777;
+}
+
+/* 안내 텍스트 */
+.upload-area span {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+/* 미리보기 영역 */
+.upload-preview {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+.upload-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* 로딩 인디케이터(옵션) */
+.upload-area.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 32px; height: 32px;
+    margin: -16px 0 0 -16px;
+    border: 4px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+
+/* --------------------- */
+/* ----- Viewport ----- */
+/* --------------------- */
 .viewport { 
     grid-area: viewport;
     background:var(--color-1); 

@@ -14,8 +14,6 @@ export class AppController {
         this.bottomEl = document.getElementById('bottom');
         this.viewportEl = document.getElementById('canvas3d');
 
-        //model
-        this.sceneModel = new SceneModel();
 
         //three.js renderer
         this.renderer = new THREE.WebGLRenderer({ canvas: this.viewportEl });
@@ -24,9 +22,16 @@ export class AppController {
         this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth/ window.innerHeight, 0.1, 1000 );
         this.camera.position.z = 5;
 
+        //model
+        this.sceneModel = new SceneModel( this.scene );
+
         //views
+        // 1) ObjectView에 “선택 시 모델 생성” 로직을 콜백으로 넘겨준다.
         this.charView = new CharacterUploadView( this.propEl );
-        this.objView = new ObjectView( this.propEl );
+        this.objView = new ObjectView( 
+            this.propEl,
+            this._handleObjectSelect.bind(this)   // ← 콜백 바인딩 
+        );
         this.timeline = new TimelineView( this.layerEl );
         this.bottomView  = new BottomControlsView(this.bottomEl);
 
@@ -40,9 +45,9 @@ export class AppController {
 
         toolbar_btns.forEach( btn => {
             btn.addEventListener('click', e => {
-                const prop = document.getElementById('property');
-                const title = e.target.dataset.title;
-                const id = e.target.id;
+                const prop = this.propEl;
+                const title = e.currentTarget.dataset.title;
+                const id = e.currentTarget.id;
 
                 const wasHidden = window.getComputedStyle(prop).display === 'none';
                 prop.style.display = wasHidden ? 'block' : 'none';
@@ -68,6 +73,22 @@ export class AppController {
         
         this._animate();
     
+    }
+
+    // 3) ObjectsView에서 더블클릭 시 호출될 메서드
+    _handleObjectSelect(id) {
+        switch (id) {
+            case 1: 
+                this.sceneModel.addCube(); 
+                break;
+            case 2: 
+                this.sceneModel.addSphere(); 
+                break;
+            case 3: 
+                this.sceneModel.addCylinder(); 
+                break;
+        }
+      // SceneModel 내부에서 this.scene.add(mesh)까지 처리한다고 가정
     }
 
     showChar() {
