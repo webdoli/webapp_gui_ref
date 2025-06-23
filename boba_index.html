@@ -1,0 +1,38 @@
+<!--
+File Structure:
+index.html
+css/style.css
+js/models/SceneModel.js
+js/models/ObjectModel.js
+js/views/CharacterUploadView.js
+js/views/ObjectsView.js
+js/views/TimelineView.js
+js/controllers/AppController.js
+js/main.js
+-->
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BobaPixel</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <aside class="toolbar" id="toolbar">
+            <button id="btnChar">Char</button>
+            <button id="btnObjects">Objects</button>
+        </aside>
+        <section class="property" id="property"></section>
+        <section class="viewport" id="viewport">
+            <canvas id="canvas3d"></canvas>
+        </section>
+        <section class="layer" id="layer"></section>
+    </div>
+
+    <!-- ES Module Scripts -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+body, html { 
+    margin:0; 
+    padding:0; 
+    height:100%; 
+    display:flex; 
+}
+
+#app { 
+    display: grid; 
+    grid-template-columns: 80px 1fr; 
+    grid-template-rows: auto 200px; 
+    grid-template-areas: "toolbar viewport" "property layer"; 
+    height:100%; width:100%; 
+}
+
+.toolbar { 
+    grid-area: toolbar; 
+    background:#333; 
+    display:flex; 
+    flex-direction:column; 
+}
+
+.toolbar button { 
+    margin:10px; 
+    color:#fff; 
+    background:transparent; 
+    border:none; 
+    cursor:pointer; 
+}
+
+.property { 
+    grid-area: property; 
+    background:#f0f0f0; 
+    padding:10px; 
+    overflow:auto; 
+}
+
+.viewport { 
+    grid-area: viewport;
+    background:#000; 
+    position:relative; 
+}
+
+.viewport canvas { 
+    width:100%; 
+    height:100%; 
+    display:block; 
+}
+
+.layer { 
+    grid-area: layer; 
+    background:#222; 
+}
