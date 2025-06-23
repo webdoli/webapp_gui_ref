@@ -20,6 +20,7 @@ export class AppController {
         //three.js renderer
         this.renderer = new THREE.WebGLRenderer({ canvas: this.viewportEl });
         this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color('#31313c')
         this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth/ window.innerHeight, 0.1, 1000 );
         this.camera.position.z = 5;
 
@@ -29,24 +30,32 @@ export class AppController {
         this.timeline = new TimelineView( this.layerEl );
         this.bottomView  = new BottomControlsView(this.bottomEl);
 
-        //bind toolbar  >> 중복되는 코드 정리해야 함
-        document.getElementById('btnChar').addEventListener('click', e => {
-            const prop = document.getElementById('property');
-            const title = e.target.dataset.title;
+        const property_list = {
+            'btnChar': this.charView,
+            'btnObjects': this.objView,
+        }
 
-            // 토글: 숨겨져 있으면 보이기, 보이면 숨기기
-            prop.style.display = (prop.style.display === 'none') ? 'block' : 'none';
-            // 필요하면 렌더할 뷰 호출
-            if (prop.style.display !== 'none') this.charView.render( title );
-        });
+        //bind toolbar  >> 중복되는 코드 정리해야 함        
+        let toolbar_btns = document.querySelectorAll('.toolbar-btn');
 
-        document.getElementById('btnObjects').addEventListener('click', e => {
-            const title = e.target.dataset.title;
-            const prop = document.getElementById('property');
-            // 토글: 숨겨져 있으면 보이기, 보이면 숨기기
-            prop.style.display = (prop.style.display === 'none') ? 'block' : 'none';
-            this.objView.render(this._objectList(), title ); 
-            
+        toolbar_btns.forEach( btn => {
+            btn.addEventListener('click', e => {
+                const prop = document.getElementById('property');
+                const title = e.target.dataset.title;
+                const id = e.target.id;
+
+                const wasHidden = window.getComputedStyle(prop).display === 'none';
+                prop.style.display = wasHidden ? 'block' : 'none';
+
+                if (wasHidden) {
+                    // 이제 막 보이게 되었으니 실행
+                    property_list[id].render({
+                        title: title,
+                        list: this._objectList?.() || []
+                    });
+                }
+
+            });
         });
 
         // Bottom controls

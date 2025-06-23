@@ -5,7 +5,8 @@ export class ObjectView {
         this.page = 1;
     }
 
-    render( list, title ) {
+    render( props ) {
+        const { title, list } = props;
         const start = ( this.page - 1 )*this.itemsPerpage;
         const pageItems = list.slice( start, start + this.itemsPerpage );
         this.container.innerHTML = `

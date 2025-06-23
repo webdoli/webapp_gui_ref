@@ -3,8 +3,10 @@ export class CharacterUploadView {
         this.container = container;
     }
 
-    render( title ) {
-        console.log('title: ', title );
+    render( props ) {
+        
+        const { title } = props;
+        console.log('캐릭터 실행, title: ', title );
         this.container.innerHTML = `
             <div id="property-title">${title}</div>
         `
