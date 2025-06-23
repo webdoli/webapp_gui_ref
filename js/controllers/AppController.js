@@ -1,8 +1,9 @@
-import { SceneModel } from "../models/SceneModel";
-import { ObjectModel } from "../models/ObjectModel";
-import { CharacterUploadView } from "../views/CharacterUploadView";
-import { ObjectView } from "../views/ObjectsView";
-import { TimelineView } from "../views/TimelineView";
+import { SceneModel } from "../models/SceneModel.js";
+import { ObjectModel } from "../models/ObjectModel.js";
+import { CharacterUploadView } from "../views/CharacterUploadView.js";
+import { ObjectView } from "../views/ObjectsView.js";
+import { TimelineView } from "../views/TimelineView.js";
+import { BottomControlsView } from "../views/BottomControlsView.js";
 import * as THREE from 'three';
 
 export class AppController {
@@ -10,6 +11,7 @@ export class AppController {
         //container
         this.propEl = document.getElementById('property');
         this.layerEl = document.getElementById('layer');
+        this.bottomEl = document.getElementById('bottom');
         this.viewportEl = document.getElementById('canvas3d');
 
         //model
@@ -23,16 +25,39 @@ export class AppController {
 
         //views
         this.charView = new CharacterUploadView( this.propEl );
-        this.ObjView = new ObjectView( this.propEl );
+        this.objView = new ObjectView( this.propEl );
         this.timeline = new TimelineView( this.layerEl );
+        this.bottomView  = new BottomControlsView(this.bottomEl);
 
-        //bind toolbar
-        document.getElementById('btnChar').addEventListener('click', () => this.showChar() );
-        document.getElementById('btnOBjects').addEventListener('click', () => {
-            this.showObjects();
-            //render loop
-            this._animate();
-        })
+        //bind toolbar  >> 중복되는 코드 정리해야 함
+        document.getElementById('btnChar').addEventListener('click', e => {
+            const prop = document.getElementById('property');
+            const title = e.target.dataset.title;
+
+            // 토글: 숨겨져 있으면 보이기, 보이면 숨기기
+            prop.style.display = (prop.style.display === 'none') ? 'block' : 'none';
+            // 필요하면 렌더할 뷰 호출
+            if (prop.style.display !== 'none') this.charView.render( title );
+        });
+
+        document.getElementById('btnObjects').addEventListener('click', e => {
+            const title = e.target.dataset.title;
+            const prop = document.getElementById('property');
+            // 토글: 숨겨져 있으면 보이기, 보이면 숨기기
+            prop.style.display = (prop.style.display === 'none') ? 'block' : 'none';
+            this.objView.render(this._objectList(), title ); 
+            
+        });
+
+        // Bottom controls
+        this.bottomView.render();
+        this.bottomView.onPlay(() => console.log('play'));
+        this.bottomView.onSkipBack(() => console.log('back'));
+        this.bottomView.onSkipForward(() => console.log('forward'));
+        this.bottomView.onZoom(val => console.log('zoom', val));
+        this.bottomView.onDownload(() => console.log('download'));
+        
+        this._animate();
     
     }
 
@@ -51,8 +76,12 @@ export class AppController {
         })
     }
 
-    showObjects() {
-
+    _objectList() {
+        return [ 
+            {id:1,type:'Cube'},
+            {id:2,type:'Sphere'},
+            {id:3,type:'Cylinder'} 
+        ];
     }
 
     _animate() {

@@ -1,43 +1,59 @@
+:root {
+    --color-1: #31313c; /* 툴바, 뷰포트 색상 */
+    --color-2: #1c1c1f; /* 속성창 색상 */
+    --color-text: #d3ccda; /* icon글씨색 */
+    --accent-color: #7750f8;
+    --semi-transparent: rgba(18, 18, 18, 0.95);
+}
+
 body, html { 
     margin:0; 
     padding:0; 
     height:100%; 
-    display:flex; 
+    display:flex;
+    overflow: hidden;
 }
 
-#app { 
-    display: grid; 
-    grid-template-columns: 80px 1fr; 
-    grid-template-rows: auto 200px; 
-    grid-template-areas: "toolbar viewport" "property layer"; 
-    height:100%; width:100%; 
+#app {
+    display: grid;
+    /* 3열: toolbar | property | viewport / 2행: main content | bottom controls */
+    grid-template-columns: 80px auto 1fr;
+    grid-template-rows: 1fr 100px;
+    grid-template-areas:
+    "toolbar property viewport"
+    "bottom bottom   bottom";
+    height: 100vh;
 }
 
 .toolbar { 
     grid-area: toolbar; 
-    background:#333; 
-    display:flex; 
+    background: var(--color-1);
+    border-right: 1px solid #49494e;
+    display:flex;
     flex-direction:column; 
 }
 
 .toolbar button { 
     margin:10px; 
-    color:#fff; 
+    color:var(--color-text); 
     background:transparent; 
     border:none; 
     cursor:pointer; 
 }
 
-.property { 
+#property { 
     grid-area: property; 
-    background:#f0f0f0; 
-    padding:10px; 
+    background:var(--color-2);
+    color: var(--color-text);
+    padding:10px;
+    width: 240px;
+    display: none;
     overflow:auto; 
 }
 
 .viewport { 
     grid-area: viewport;
-    background:#000; 
+    background:var(--color-1); 
     position:relative; 
 }
 
@@ -49,5 +65,151 @@ body, html {
 
 .layer { 
     grid-area: layer; 
-    background:#222; 
+    background:var(--semi-transparent); 
+}
+
+#bottom { 
+    grid-area: bottom;
+    background: #222;
+    /* 필요하면 고정 높이나 padding 조정 */
+    padding: 8px 16px;
+    box-sizing: border-box;
+}
+
+#bottom .icon img {
+    width: 24px;
+}
+
+#bottom .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    width: 100%;
+    height: 60px;
+    border-top: 1px solid black;
+    background-color: var(--color-bg-2);
+}
+
+#bottom .timeline-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.timeline-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding: 10px;
+    border-radius: 6px;
+    color: #fff;
+}
+
+#timeline-zoom {
+    appearance: none;
+    width: 120px;
+    height: 4px;
+    border-radius: 5px;
+    background: #888;
+    cursor: pointer;
+}
+
+#timeline-zoom::-webkit-slider-thumb {
+    appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffd700;
+    cursor: pointer;
+    border: none;
+    margin-top: -6px;
+}
+
+#timeline-zoom::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffd700;
+    border: none;
+    cursor: pointer;
+}
+
+#bottom #speed {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background-color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* hover 시 배경색 변경 */
+#bottom #speed:hover {
+    background-color: #444;
+}
+
+/* 드롭다운 메뉴 기본 상태: 숨김 */
+#bottom #speed-settings {
+    display: none;
+    position: absolute;
+    bottom: 120%;
+    left: 0;
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    z-index: 1000;
+    min-width: 80px;
+}
+
+#bottom #speed-settings .speed {
+    padding: 4px 36px;
+    color: white;
+    cursor: pointer;
+}
+
+#bottom #speed-settings .speed:hover {
+    background-color: #555;
+}
+
+
+#bottom .playback {
+    display: flex;
+    justify-content: space-evenly;
+    width: 20rem;
+}
+
+#bottom .playback input {
+    background-color: transparent;
+    border: none;
+    color: var(--color-text);
+    font-weight: normal;
+    font-size: 1rem;
+    width: 70px;
+    padding: 0;
+}
+
+#bottom .playback input:focus {
+    outline: none;
+}
+
+#bottom .controls-right {
+    display: flex;
+    margin-right: 2rem;
+}
+
+#bottom .controls-right #download {
+    line-height: 34px;
+    height: 34px;
+    padding: 0 10px;
+    background-color: var(--accent-color);
+    color: var(--color-text);
+}
+
+#bottom .controls-right #download-icon {
+    width: 14px;
 }

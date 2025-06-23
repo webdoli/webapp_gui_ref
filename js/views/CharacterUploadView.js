@@ -3,8 +3,12 @@ export class CharacterUploadView {
         this.container = container;
     }
 
-    render() {
+    render( title ) {
+        console.log('title: ', title );
         this.container.innerHTML = `
+            <div id="property-title">${title}</div>
+        `
+        this.container.innerHTML += `
             <input type="file" id="charInput" accept="image/*">
         `;
         document.getElementById('charInput').addEventListener('change', e => {

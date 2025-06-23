@@ -17,19 +17,27 @@ js/main.js
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BobaPixel</title>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js"
+        }
+    }
+    </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div id="app">
         <aside class="toolbar" id="toolbar">
-            <button id="btnChar">Char</button>
-            <button id="btnObjects">Objects</button>
+            <button id="btnChar" data-title="Chracter Creating">Char</button>
+            <button id="btnObjects" data-title="Assets">Objects</button>
         </aside>
         <section class="property" id="property"></section>
         <section class="viewport" id="viewport">
             <canvas id="canvas3d"></canvas>
         </section>
         <section class="layer" id="layer"></section>
+        <section id="bottom"></section>
     </div>
 
     <!-- ES Module Scripts -->
