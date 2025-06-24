@@ -170,6 +170,28 @@ body, html {
     animation: spin 1s linear infinite;
 }
 
+/* asset-wrapper에 2열 그리드 설정 */
+.asset-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 110px);
+    grid-auto-rows: auto;
+    gap: 8px;             /* 썸네일 간 간격 */
+    width: max-content;   /* 컨텐츠 크기에 맞춰 셀 너비 고정 */
+    overflow-x: hidden;
+    margin: 0 auto;
+}
+
+/* thumb-wrapper는 width만 지정 */
+.thumb-wrapper {
+    width: 110px;
+}
+
+/* 이미지가 래퍼에 꽉 차도록 */
+.thumb-wrapper img {
+    width: 100%;
+    display: block;
+}
+
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
