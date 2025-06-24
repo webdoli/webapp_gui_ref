@@ -30,13 +30,7 @@ export class ObjectView {
                 this._onSelect(id);
             });
         });
-        // this.container.innerHTML += pageItems.map( o => `
-        //         <div class="object-item" data-id="${o.id}"> ${o.type}</div>
-        //     `).join('') + `<div class="pagination"> Page ${this.page} </div>`;
         
-        // this.container.addEventListener('dblclick', (e) => {
-        //     this.onSelect(e.target.dataset.id);
-        // });
     }
 
     onSelect( cb ) {

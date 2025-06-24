@@ -94,7 +94,7 @@ export class CharacterUploadView {
             };
 
             // 콜백 호출 (미래에 mediapipe 분석 등)
-            if (this._uploadCb) {
+            if ( file && this._uploadCb ) {
                 this._uploadCb(file);
             }
         });
@@ -102,8 +102,8 @@ export class CharacterUploadView {
     }
 
     onUpload( cb ) {
-        this.onUpload = cb;
+        this._uploadCb = cb;
     }
 
-    onUpload( cb ) { this.onUpload = cb; }
+
 }

@@ -20,10 +20,12 @@ js/main.js
     <script type="importmap">
     {
         "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js"
+            "three":"https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js"
         }
     }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>  <!-- UMD build exposes window.FaceMesh, window.FACEMESH_TESSELATION 등 모두 글로벌로 -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
