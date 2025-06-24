@@ -179,10 +179,12 @@ body, html {
 /* --------------------- */
 /* ----- Viewport ----- */
 /* --------------------- */
-.viewport { 
+.viewport {
     grid-area: viewport;
     background:var(--color-1); 
-    position:relative; 
+    position:relative;
+    width: 100%;
+    overflow: hidden;
     border: 1px solid #49494e;
 }
 

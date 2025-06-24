@@ -5,11 +5,16 @@ import { ObjectView } from "../views/ObjectsView.js";
 import { TimelineView } from "../views/TimelineView.js";
 import { BottomControlsView } from "../views/BottomControlsView.js";
 import * as THREE from 'three';
-// import { FaceMesh } from "@mediapipe/face_mesh";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { FaceMesh, FACEMESH_TESSELATION  } from '@mediapipe/face_mesh';
+import { TRIANGULATION } from "../lib/triangulation.js";
+import { Camera } from '@mediapipe/camera_utils';
+import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
+
 
 export class AppController {
     constructor() {
-
+        
         //container
         this.propEl = document.getElementById('property');
         this.layerEl = document.getElementById('layer');
@@ -17,17 +22,40 @@ export class AppController {
         this.viewportEl = document.getElementById('canvas3d');
 
         //three.js renderer
-        this.renderer = new THREE.WebGLRenderer({ canvas: this.viewportEl });
+        this.renderer = new THREE.WebGLRenderer({ 
+            canvas: this.viewportEl,
+            antialias: true
+        });
+
+        // 디바이스 픽셀 비율 설정 (고DPI 대응)
+        this.renderer.setPixelRatio( window.devicePixelRatio );
+        // 3) 렌더러 사이즈를 실제 화면 크기 맞춤
+        this.renderer.setSize( window.innerWidth, window.innerHeight );
+
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color('#31313c')
         this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth/ window.innerHeight, 0.1, 1000 );
         this.camera.position.z = 5;
 
         // **조명 추가**
-        this.scene.add( new THREE.AmbientLight( 0xffffff, 0.6 ) );
-        const dl = new THREE.DirectionalLight( 0xffffff, 0.8 );
-        dl.position.set( 0, 0, 1 );
+        this.scene.add( new THREE.AmbientLight( 0xffffff, .6 ) );
+        const dl = new THREE.DirectionalLight( 0xffffff, .6 );
+        dl.position.set( 0, 0, 5 );
         this.scene.add( dl );
+
+        this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+        const grid = new THREE.GridHelper( 10, 10 );
+        this.scene.add( grid );
+
+        // 윈도우 리사이즈 대응
+        window.addEventListener('resize', () => {
+            // 화면 크기 변화에 맞춰 카메라 비율 업데이트
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.updateProjectionMatrix();
+
+            // 렌더러 크기도 다시 맞춰줍니다
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+        });
 
         //model
         this.sceneModel = new SceneModel( this.scene );
@@ -103,46 +131,89 @@ export class AppController {
         const image = await this._loadImage(file);
 
         // 2) FaceMesh (UMD) 인스턴스 생성
-        const faceMesh = new window.FaceMesh({
+        const faceMesh = new FaceMesh({
             locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`
         });
 
+        // 옵션 설정
         faceMesh.setOptions({
-            staticImageMode: true,
-            maxNumFaces: 1,
-            refineLandmarks: false,
+            staticImageMode:true,
+            maxNumFaces:1,
+            refineLandmarks:false,
             minDetectionConfidence: 0.5,
+            minTrackingConfidence:  0.5
         });
 
         // 3) onResults 콜백 등록
         faceMesh.onResults(results => {
             const landmarks = results.multiFaceLandmarks?.[0];
-            if (!landmarks) {
-                console.warn('얼굴을 찾지 못했습니다.');
-                return;
-            }
+            if (!landmarks) return;
         
             // → 여기서 Three.js 메쉬 생성 로직 실행
+            // 포지션 버퍼 생성
             const positions = new Float32Array(landmarks.length * 3);
             landmarks.forEach((pt, i) => {
                 positions[i*3+0] = (pt.x - 0.5)*2;
                 positions[i*3+1] = -(pt.y - 0.5)*2;
                 positions[i*3+2] = -pt.z;
             });
+
+            // UV 2D코드로 만들기
+            const uvs = new Float32Array( landmarks.length * 2 );
+            landmarks.forEach((pt,i) => {
+              uvs[i*2] = pt.x;
+              uvs[i*2 + 1] = 1 - pt.y;
+            });
             
-            const tess = window.FACEMESH_TESSELLATION;  
+            // 토폴로지 인덱스 (삼각형 연결 정보)
+            const tess2d = FACEMESH_TESSELATION;
+            const indicesFlat = Array.isArray(tess2d[0])
+            ? tess2d.flat()
+            : tess2d;
+
+            // const indicesFlat = tess2d.flat(); // 2차원 배열임, mesh는 1차원 배열로 만들어야 하므로 .flat()필요없음
+
+            // Three.js 지오메트리 & 메쉬 생성
             const geometry = new THREE.BufferGeometry();
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setIndex(tess.flat());
+            geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+            geometry.setIndex( TRIANGULATION );
             geometry.computeVertexNormals();
-        
-            const material = new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+
+            const texture = new THREE.Texture(image);
+            texture.needsUpdate = true;
+
+            const material = new THREE.MeshBasicMaterial({
+                map:  texture,
+                side: THREE.DoubleSide, 
+            });
+
             const mesh = new THREE.Mesh(geometry, material);
+            mesh.frustumCulled = false;         // disable culling in case bounds are odd
             this.sceneModel.addMesh(mesh);
+
+            const wireGeo = new THREE.WireframeGeometry( geometry );
+            const wireMat = new THREE.LineBasicMaterial({
+                color: 0x000000,
+                transparent: true,
+                opacity: 0.5,
+                depthTest: false     // 텍스처 메쉬 위에 항상 보이게
+            });
+
+            const wireframe = new THREE.LineSegments( wireGeo, wireMat );
+            this.sceneModel.addMesh( wireframe );
+            
+
+            // Reframe camera
+            geometry.computeBoundingSphere();
+            const { center, radius } = geometry.boundingSphere;
+            this.camera.position.set(center.x, center.y, center.z + radius * 5);
+            this.camera.lookAt(center);
+            this.controls.update();
+
         });
     
-        // 4) 결과 리턴 대신 send 호출만
-        await faceMesh.initialize?.();  // UMD에서는 필요 없으면 삭제해도 무방
+        // 정적 이미지 한 번 처리
         await faceMesh.send({ image });
 
     }
@@ -174,6 +245,7 @@ export class AppController {
 
     _animate() {
         requestAnimationFrame(( () => this._animate() ));
+        this.controls.update();
         this.renderer.render( this.scene, this.camera );
     }
 }

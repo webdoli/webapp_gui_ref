@@ -7,6 +7,16 @@ export class SceneModel {
         this.changeCallbacks = [];
     }
 
+    addMesh( mesh ) {
+        // Add to Three.js scene
+        this.scene.add( mesh );
+        // Track in model list
+        this.objects.push( mesh );
+        // Notify change listeners
+        this._emit();
+    }
+
+    // 테스트용
     addCube() {
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
