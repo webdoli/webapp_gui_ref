@@ -9,6 +9,7 @@ export class SceneModel {
 
     addMesh( mesh ) {
         // Add to Three.js scene
+        mesh.scale.multiplyScalar(0.05);
         this.scene.add( mesh );
         // Track in model list
         this.objects.push( mesh );

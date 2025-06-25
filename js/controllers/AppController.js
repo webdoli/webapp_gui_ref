@@ -2,10 +2,12 @@ import { SceneModel } from "../models/SceneModel.js";
 import { ObjectModel } from "../models/ObjectModel.js";
 import { CharacterUploadView } from "../views/CharacterUploadView.js";
 import { ObjectView } from "../views/ObjectsView.js";
+import { AssetLoader } from "../loaders/AssetLoader.js";
 import { TimelineView } from "../views/TimelineView.js";
 import { BottomControlsView } from "../views/BottomControlsView.js";
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { FaceMesh, FACEMESH_TESSELATION  } from '@mediapipe/face_mesh';
 import { TRIANGULATION } from "../lib/triangulation.js";
 import { Camera } from '@mediapipe/camera_utils';
@@ -47,6 +49,14 @@ export class AppController {
         const grid = new THREE.GridHelper( 10, 10 );
         this.scene.add( grid );
 
+        this.transformControls = new TransformControls( this.camera, this.renderer.domElement );
+        this.scene.add( this.transformControls );
+
+        // transform 상태일 때 OrbitControls 가 방해하지 않도록 토글
+        this.transformControls.addEventListener('dragging-changed', (event) => {
+            this.controls.enabled = !event.value;
+        });
+
         // 윈도우 리사이즈 대응
         window.addEventListener('resize', () => {
             // 화면 크기 변화에 맞춰 카메라 비율 업데이트
@@ -59,6 +69,7 @@ export class AppController {
 
         //model
         this.sceneModel = new SceneModel( this.scene );
+        this.assetLoader = new AssetLoader();
 
         //views
         // 1) ObjectView에 “선택 시 모델 생성” 로직을 콜백으로 넘겨준다.
@@ -220,19 +231,21 @@ export class AppController {
 
 
     // 3) ObjectsView에서 더블클릭 시 호출될 메서드
-    _handleObjectSelect(id) {
-        switch (id) {
-            case 1: 
-                this.sceneModel.addCube(); 
-                break;
-            case 2: 
-                this.sceneModel.addSphere(); 
-                break;
-            case 3: 
-                this.sceneModel.addCylinder(); 
-                break;
+    async _handleObjectSelect(url) {
+        try {
+            const model3d = await this.assetLoader.load(url);
+            model3d.scale.multiplyScalar(0.2);
+            this.sceneModel.addMesh(model3d);
+
+            const lastAdded = this.sceneModel.objects.slice(-1)[0]; // 방금 addMesh 한 객체
+            // 또는 load 콜백에서 gltf.scene 을 바로 사용해도 OK
+
+            // 1) TransformControls 에 연결
+            this.transformControls.attach( lastAdded );
+
+        } catch (err) {
+            console.error('모델 로드 중 에러:', err);
         }
-      // SceneModel 내부에서 this.scene.add(mesh)까지 처리한다고 가정
     }
 
     _objectList() {

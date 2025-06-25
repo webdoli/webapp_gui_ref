@@ -1,7 +1,7 @@
 export class ObjectView {
     constructor( container, onSelectCallback ) {
         this.container = container;
-        this._onSelect = onSelectCallback;   // ← 두 번째 인자를 받아서 멤버에 저장
+        this.onSelectCallback = onSelectCallback;
         this.itemsPerpage = 5;
         this.page = 1;
 
@@ -42,7 +42,7 @@ export class ObjectView {
         // 2) 에셋 래퍼
         const wrapper = document.createElement('div');
         wrapper.className = 'asset-wrapper';
-
+        
         // 3) 에셋 
         for( let item in asset_list ) {
             const thumb_wrapper = document.createElement('span');
@@ -50,13 +50,15 @@ export class ObjectView {
             const thumb = document.createElement('img');
             thumb.className = 'asset-thumb';
             thumb.src = asset_list[item];
-            thumb.dataset.asseturl = asset_url[item]; 
+            thumb.dataset.asseturl = asset_url[item];
             thumb_wrapper.append( thumb );
             wrapper.append( thumb_wrapper );
-
+            
             thumb.addEventListener('dblclick', (e) => {
+
                 const url = e.target.dataset.asseturl;
-                this._onSelect( url );
+                console.log('url: ', url );
+                this.onSelectCallback(url);
             })
         }
 
@@ -92,7 +94,7 @@ export class ObjectView {
         
     }
 
-    onSelect( cb ) {
+    _onSelect( cb ) {
         console.log('cb: ', cb);
         this.onSelect = cb;
     }
